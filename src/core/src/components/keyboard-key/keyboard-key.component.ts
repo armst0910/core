@@ -1,7 +1,16 @@
-import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Inject,
+  Input,
+  OnInit,
+  Output
+} from '@angular/core';
 import { FormControl } from '@angular/forms';
 
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
 
 import { MAT_KEYBOARD_DEADKEYS } from '../../configs/keyboard-deadkey.config';
 import { MAT_KEYBOARD_ICONS } from '../../configs/keyboard-icons.config';
@@ -21,7 +30,6 @@ export const VALUE_TAB = '\t';
   preserveWhitespaces: false
 })
 export class MatKeyboardKeyComponent implements OnInit {
-
   private _deadkeyKeys: string[] = [];
 
   private _iconKeys: string[] = [];
@@ -97,7 +105,9 @@ export class MatKeyboardKeyComponent implements OnInit {
   }
 
   get isDeadKey(): boolean {
-    return this._deadkeyKeys.some((deadKey: string) => deadKey === `${this.key}`);
+    return this._deadkeyKeys.some(
+      (deadKey: string) => deadKey === `${this.key}`
+    );
   }
 
   get hasIcon(): boolean {
@@ -126,7 +136,11 @@ export class MatKeyboardKeyComponent implements OnInit {
   get inputValue(): string {
     if (this.control) {
       return this.control.value;
-    } else if (this.input && this.input.nativeElement && this.input.nativeElement.value) {
+    } else if (
+      this.input &&
+      this.input.nativeElement &&
+      this.input.nativeElement.value
+    ) {
       return this.input.nativeElement.value;
     } else {
       return '';
@@ -142,8 +156,10 @@ export class MatKeyboardKeyComponent implements OnInit {
   }
 
   // Inject dependencies
-  constructor(@Inject(MAT_KEYBOARD_DEADKEYS) private _deadkeys: IKeyboardDeadkeys,
-              @Inject(MAT_KEYBOARD_ICONS) private _icons: IKeyboardIcons) {}
+  constructor(
+    @Inject(MAT_KEYBOARD_DEADKEYS) private _deadkeys: IKeyboardDeadkeys,
+    @Inject(MAT_KEYBOARD_ICONS) private _icons: IKeyboardIcons
+  ) {}
 
   ngOnInit() {
     // read the deadkeys
@@ -176,7 +192,9 @@ export class MatKeyboardKeyComponent implements OnInit {
         break;
 
       case KeyboardClassKey.Bksp:
-        this.inputValue = [value.slice(0, caret - 1), value.slice(caret)].join('');
+        this.inputValue = [value.slice(0, caret - 1), value.slice(caret)].join(
+          ''
+        );
         this._setCursorPosition(caret - 1);
         this.bkspClick.emit(event);
         break;
@@ -218,7 +236,9 @@ export class MatKeyboardKeyComponent implements OnInit {
     }
 
     if (char && this.input) {
-      this.inputValue = [value.slice(0, caret), char, value.slice(caret)].join('');
+      this.inputValue = [value.slice(0, caret), char, value.slice(caret)].join(
+        ''
+      );
       this._setCursorPosition(caret + 1);
     }
   }
@@ -284,7 +304,10 @@ export class MatKeyboardKeyComponent implements OnInit {
       return true;
     } else {
       // (el.selectionStart === 0 added for Firefox bug)
-      if (this.input.nativeElement.selectionStart || this.input.nativeElement.selectionStart === 0) {
+      if (
+        this.input.nativeElement.selectionStart ||
+        this.input.nativeElement.selectionStart === 0
+      ) {
         this.input.nativeElement.focus();
         this.input.nativeElement.setSelectionRange(position, position);
         return true;
@@ -298,7 +321,10 @@ export class MatKeyboardKeyComponent implements OnInit {
   }
 
   private _isTextarea(): boolean {
-    return this.input && this.input.nativeElement && this.input.nativeElement.tagName === 'TEXTAREA';
+    return (
+      this.input &&
+      this.input.nativeElement &&
+      this.input.nativeElement.tagName === 'TEXTAREA'
+    );
   }
-
 }

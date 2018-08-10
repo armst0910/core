@@ -11,9 +11,18 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 // Configs
-import { keyboardDeadkeys, MAT_KEYBOARD_DEADKEYS } from './configs/keyboard-deadkey.config';
-import { keyboardIcons, MAT_KEYBOARD_ICONS } from './configs/keyboard-icons.config';
-import { keyboardLayouts, MAT_KEYBOARD_LAYOUTS } from './configs/keyboard-layouts.config';
+import {
+  keyboardDeadkeys,
+  MAT_KEYBOARD_DEADKEYS
+} from './configs/keyboard-deadkey.config';
+import {
+  keyboardIcons,
+  MAT_KEYBOARD_ICONS
+} from './configs/keyboard-icons.config';
+import {
+  keyboardLayouts,
+  MAT_KEYBOARD_LAYOUTS
+} from './configs/keyboard-layouts.config';
 // Components and directives
 import { MatKeyboardContainerComponent } from './components/keyboard-container/keyboard-container.component';
 import { MatKeyboardKeyComponent } from './components/keyboard-key/keyboard-key.component';

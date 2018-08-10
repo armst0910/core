@@ -1,7 +1,6 @@
 import { OverlayRef } from '@angular/cdk/overlay';
 
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+import { Observable, Subject } from 'rxjs';
 
 import { MatKeyboardComponent } from '../components/keyboard/keyboard.component';
 import { MatKeyboardContainerComponent } from '../components/keyboard-container/keyboard-container.component';
@@ -10,7 +9,6 @@ import { MatKeyboardContainerComponent } from '../components/keyboard-container/
  * Reference to a keyboard dispatched from the keyboard service.
  */
 export class MatKeyboardRef<T> {
-
   /** Subject for notifying the user that the keyboard has closed. */
   private _afterClosed: Subject<any> = new Subject();
 
@@ -23,9 +21,11 @@ export class MatKeyboardRef<T> {
   /** The instance of the component making up the content of the keyboard. */
   containerInstance: MatKeyboardContainerComponent;
 
-  constructor(instance: MatKeyboardComponent,
-              containerInstance: MatKeyboardContainerComponent,
-              private _overlayRef: OverlayRef) {
+  constructor(
+    instance: MatKeyboardComponent,
+    containerInstance: MatKeyboardContainerComponent,
+    private _overlayRef: OverlayRef
+  ) {
     // Sets the readonly instance of the keyboard content component.
     this.instance = instance;
     this.containerInstance = containerInstance;

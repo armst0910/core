@@ -1,11 +1,32 @@
-import { animate, AnimationEvent, state, style, transition, trigger } from '@angular/animations';
-import { BasePortalOutlet, CdkPortalOutlet, ComponentPortal } from '@angular/cdk/portal';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentRef, EmbeddedViewRef, HostBinding, HostListener, NgZone, OnDestroy, ViewChild } from '@angular/core';
+import {
+  animate,
+  AnimationEvent,
+  state,
+  style,
+  transition,
+  trigger
+} from '@angular/animations';
+import {
+  BasePortalOutlet,
+  CdkPortalOutlet,
+  ComponentPortal
+} from '@angular/cdk/portal';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  ComponentRef,
+  EmbeddedViewRef,
+  HostBinding,
+  HostListener,
+  NgZone,
+  OnDestroy,
+  ViewChild
+} from '@angular/core';
 import { AnimationCurves, AnimationDurations } from '@angular/material/core';
 
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
-import 'rxjs/add/operator/first';
+import { Observable, Subject } from 'rxjs';
+import { first } from 'rxjs/operators';
 
 import { MatKeyboardConfig } from '../../configs/keyboard.config';
 import { KeyboardAnimationState } from '../../enums/keyboard-animation-state.enum';
@@ -13,8 +34,12 @@ import { KeyboardAnimationTransition } from '../../enums/keyboard-animation-tran
 
 // TODO: we can't use constants from animation.ts here because you can't use
 // a text interpolation in anything that is analyzed statically with ngc (for AoT compile).
-export const SHOW_ANIMATION = `${AnimationDurations.ENTERING} ${AnimationCurves.DECELERATION_CURVE}`;
-export const HIDE_ANIMATION = `${AnimationDurations.EXITING} ${AnimationCurves.ACCELERATION_CURVE}`;
+export const SHOW_ANIMATION = `${AnimationDurations.ENTERING} ${
+  AnimationCurves.DECELERATION_CURVE
+}`;
+export const HIDE_ANIMATION = `${AnimationDurations.EXITING} ${
+  AnimationCurves.ACCELERATION_CURVE
+}`;
 
 /**
  * Internal component that wraps user-provided keyboard content.
@@ -35,14 +60,20 @@ export const HIDE_ANIMATION = `${AnimationDurations.EXITING} ${AnimationCurves.A
   // ]
   animations: [
     trigger('state', [
-      state(`${KeyboardAnimationState.Visible}`, style({ transform: 'translateY(0%)' })),
-      transition(`${KeyboardAnimationTransition.Hide}`, animate(HIDE_ANIMATION)),
+      state(
+        `${KeyboardAnimationState.Visible}`,
+        style({ transform: 'translateY(0%)' })
+      ),
+      transition(
+        `${KeyboardAnimationTransition.Hide}`,
+        animate(HIDE_ANIMATION)
+      ),
       transition(`${KeyboardAnimationTransition.Show}`, animate(SHOW_ANIMATION))
     ])
   ]
 })
-export class MatKeyboardContainerComponent extends BasePortalOutlet implements OnDestroy {
-
+export class MatKeyboardContainerComponent extends BasePortalOutlet
+  implements OnDestroy {
   /** Whether the component has been destroyed. */
   private _destroyed = false;
 
@@ -52,7 +83,7 @@ export class MatKeyboardContainerComponent extends BasePortalOutlet implements O
 
   /** The state of the keyboard animations. */
   @HostBinding('@state')
-  private _animationState: KeyboardAnimationState = KeyboardAnimationState.Void;
+  _animationState: KeyboardAnimationState = KeyboardAnimationState.Void;
 
   /** Subject for notifying that the keyboard has exited from view. */
   onExit: Subject<any> = new Subject();
@@ -66,8 +97,10 @@ export class MatKeyboardContainerComponent extends BasePortalOutlet implements O
   // the keyboard configuration
   keyboardConfig: MatKeyboardConfig;
 
-  constructor(private _ngZone: NgZone,
-              private _changeDetectorRef: ChangeDetectorRef) {
+  constructor(
+    private _ngZone: NgZone,
+    private _changeDetectorRef: ChangeDetectorRef
+  ) {
     super();
   }
 
@@ -79,7 +112,9 @@ export class MatKeyboardContainerComponent extends BasePortalOutlet implements O
   /** Attach a component portal as content to this keyboard container. */
   attachComponentPortal<T>(portal: ComponentPortal<T>): ComponentRef<T> {
     if (this._portalOutlet.hasAttached()) {
-      throw Error('Attempting to attach keyboard content after content is already attached');
+      throw Error(
+        'Attempting to attach keyboard content after content is already attached'
+      );
     }
 
     return this._portalOutlet.attachComponentPortal(portal);
@@ -95,7 +130,11 @@ export class MatKeyboardContainerComponent extends BasePortalOutlet implements O
   onAnimationEnd(event: AnimationEvent) {
     const { fromState, toState } = event;
 
-    if ((toState === KeyboardAnimationState.Void && fromState !== KeyboardAnimationState.Void) || toState.startsWith('hidden')) {
+    if (
+      (toState === KeyboardAnimationState.Void &&
+        fromState !== KeyboardAnimationState.Void) ||
+      toState.startsWith('hidden')
+    ) {
       this._completeExit();
     }
 
@@ -140,7 +179,7 @@ export class MatKeyboardContainerComponent extends BasePortalOutlet implements O
   private _completeExit() {
     this._ngZone.onMicrotaskEmpty
       .asObservable()
-      .first()
+      .pipe(first())
       .subscribe(() => {
         this.onExit.next();
         this.onExit.complete();
